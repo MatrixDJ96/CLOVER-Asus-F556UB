@@ -5,20 +5,20 @@
  * 
  * Disassembling to non-symbolic legacy ASL operators
  *
- * Disassembly of SSDT-x4_3-ApCst.aml, Sun Dec 29 18:01:11 2019
+ * Disassembly of SSDT-x4_6-HwpLvt.aml, Sun Jul 19 01:28:04 2020
  *
  * Original Table Header:
  *     Signature        "SSDT"
- *     Length           0x00000119 (281)
+ *     Length           0x00000130 (304)
  *     Revision         0x02
- *     Checksum         0xEA
+ *     Checksum         0x85
  *     OEM ID           "PmRef"
- *     OEM Table ID     "ApCst"
+ *     OEM Table ID     "HwpLvt"
  *     OEM Revision     0x00003000 (12288)
  *     Compiler ID      "INTL"
  *     Compiler Version 0x20120913 (538052883)
  */
-DefinitionBlock ("", "SSDT", 2, "PmRef", "ApCst", 0x00003000)
+DefinitionBlock ("", "SSDT", 2, "PmRef", "HwpLvt", 0x00003000)
 {
     /*
      * External declarations were imported from
@@ -27,7 +27,7 @@ DefinitionBlock ("", "SSDT", 2, "PmRef", "ApCst", 0x00003000)
 
     External (_GPE.MMTB, MethodObj)    // Imported: 0 Arguments
     External (_GPE.VHOV, MethodObj)    // Imported: 3 Arguments
-    External (_PR_.CPU0._CST, MethodObj)    // 0 Arguments
+    External (_PR_.CPU0, ProcessorObj)
     External (_PR_.CPU1, ProcessorObj)
     External (_PR_.CPU2, ProcessorObj)
     External (_PR_.CPU3, ProcessorObj)
@@ -43,60 +43,43 @@ DefinitionBlock ("", "SSDT", 2, "PmRef", "ApCst", 0x00003000)
     External (_SB_.PCI0.SAT0.SDSM, MethodObj)    // Imported: 4 Arguments
     External (_SB_.PCI0.XHC_.RHUB.TPLD, MethodObj)    // Imported: 2 Arguments
     External (MDBG, MethodObj)    // Imported: 1 Arguments
+    External (TCNT, FieldUnitObj)
 
-    Scope (\_PR.CPU1)
+    Scope (\_GPE)
     {
-        Method (_CST, 0, NotSerialized)  // _CST: C-States
+        Method (HLVT, 0, Serialized)
         {
-            Return (\_PR.CPU0._CST ())
-        }
-    }
+            Switch (ToInteger (TCNT))
+            {
+                Case (0x08)
+                {
+                    Notify (\_PR.CPU0, 0x83)
+                    Notify (\_PR.CPU1, 0x83)
+                    Notify (\_PR.CPU2, 0x83)
+                    Notify (\_PR.CPU3, 0x83)
+                    Notify (\_PR.CPU4, 0x83)
+                    Notify (\_PR.CPU5, 0x83)
+                    Notify (\_PR.CPU6, 0x83)
+                    Notify (\_PR.CPU7, 0x83)
+                }
+                Case (0x04)
+                {
+                    Notify (\_PR.CPU0, 0x83)
+                    Notify (\_PR.CPU1, 0x83)
+                    Notify (\_PR.CPU2, 0x83)
+                    Notify (\_PR.CPU3, 0x83)
+                }
+                Case (0x02)
+                {
+                    Notify (\_PR.CPU0, 0x83)
+                    Notify (\_PR.CPU1, 0x83)
+                }
+                Default
+                {
+                    Notify (\_PR.CPU0, 0x83)
+                }
 
-    Scope (\_PR.CPU2)
-    {
-        Method (_CST, 0, NotSerialized)  // _CST: C-States
-        {
-            Return (\_PR.CPU0._CST ())
-        }
-    }
-
-    Scope (\_PR.CPU3)
-    {
-        Method (_CST, 0, NotSerialized)  // _CST: C-States
-        {
-            Return (\_PR.CPU0._CST ())
-        }
-    }
-
-    Scope (\_PR.CPU4)
-    {
-        Method (_CST, 0, NotSerialized)  // _CST: C-States
-        {
-            Return (\_PR.CPU0._CST ())
-        }
-    }
-
-    Scope (\_PR.CPU5)
-    {
-        Method (_CST, 0, NotSerialized)  // _CST: C-States
-        {
-            Return (\_PR.CPU0._CST ())
-        }
-    }
-
-    Scope (\_PR.CPU6)
-    {
-        Method (_CST, 0, NotSerialized)  // _CST: C-States
-        {
-            Return (\_PR.CPU0._CST ())
-        }
-    }
-
-    Scope (\_PR.CPU7)
-    {
-        Method (_CST, 0, NotSerialized)  // _CST: C-States
-        {
-            Return (\_PR.CPU0._CST ())
+            }
         }
     }
 }

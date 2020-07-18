@@ -3441,17 +3441,6 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
                 0x12
             }
         })
-        Device(ALS0)
-        {
-            Name(_HID, "ACPI0008")
-            Name(_CID, "smc-als")
-            Name(_ALI, 150)
-            Name(_ALR, Package()
-            {
-                Package() { 100, 150 },
-            })
-        }
-        
     }
 
     Scope (_SB)
@@ -5499,10 +5488,42 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
                     })
                 }
 
+                Zero
+                Zero
+                Zero
+                Zero
+                Zero
+                Zero
+                Zero
+                Zero
+                Zero
+                Zero
+                Zero
+                Zero
+                Zero
+                Zero
+                Zero
+                Zero
+                Zero
+                Zero
+                Zero
+                Zero
+                Zero
+                Zero
+                Zero
+                Zero
+                Zero
                 Method (HPME, 0, Serialized)
                 {
                     If (LAnd (LNotEqual (VDID, 0xFFFFFFFF), LEqual (PMSX, One)))
                     {
+                        Zero
+                        Zero
+                        Zero
+                        Zero
+                        Zero
+                        Zero
+                        Zero
                         Store (One, PMSX)
                         Store (One, PSPX)
                     }
@@ -31883,22 +31904,6 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
 
                 Return (MEMD)
             }
-            
-            
-            Method (SKBV, 1, NotSerialized)
-            {
-                ^^KBLV = Arg0 / 16
-                ^^PCI0.LPCB.EC0.WRAM (0x04B1, Arg0)
-                Return (Arg0)
-            }
-            Method (ALSS, 0, NotSerialized)
-            {
-                Return (^^ALS0._ALI)
-            }
-            Method (ALSC, 1, NotSerialized)
-            {
-                // This method does nothing
-            }
         }
     }
 
@@ -37467,24 +37472,156 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
 
         Method (_Q0E, 0, NotSerialized)  // _Qxx: EC Query
         {
-            
-            
-            If (ATKP)
+            If (LLess (MSOS (), OSW8))
             {
-                \_SB.ATKD.IANE (0x20)
+                SBRN ()
             }
 
+            If (LGreaterEqual (MSOS (), OSVT))
+            {
+                Store (LBTN, Local0)
+                If (^^^GFX0.PRST ())
+                {
+                    If (LNotEqual (^^^GFX0.LCDD._DCS (), 0x1F))
+                    {
+                        Return (Zero)
+                    }
 
+                    ^^^GFX0.DWBL ()
+                    Store (One, ASBN)
+                }
+
+                If (^^^RP01.PEGP.PRST ())
+                {
+                    If (LNot (ASBN))
+                    {
+                        If (LNotEqual (^^^RP01.PEGP.LCDD._DCS, 0x1F))
+                        {
+                            Return (Zero)
+                        }
+
+                        ^^^RP01.PEGP.DWBL ()
+                        Store (One, ASBN)
+                    }
+                }
+
+                Store (Zero, ASBN)
+                If (ATKP)
+                {
+                    If (LGreaterEqual (MSOS (), OSW8)){}
+                    Else
+                    {
+                        If (LGreater (Local0, Zero))
+                        {
+                            Decrement (Local0)
+                        }
+
+                        If (LGreater (Local0, 0x0A))
+                        {
+                            Store (0x0A, Local0)
+                        }
+
+                        Store (Local0, LBTN)
+                        ^^^^ATKD.IANE (Add (Local0, 0x20))
+                    }
+                }
+            }
+            Else
+            {
+                If (LGreater (LBTN, Zero))
+                {
+                    Decrement (LBTN)
+                }
+
+                If (LGreater (LBTN, 0x0A))
+                {
+                    Store (0x0A, LBTN)
+                }
+
+                STBR ()
+                If (ATKP)
+                {
+                    ^^^^ATKD.IANE (Add (LBTN, 0x20))
+                }
+            }
+
+            Return (Zero)
         }
 
         Method (_Q0F, 0, NotSerialized)  // _Qxx: EC Query
         {
-            
-            If (ATKP)
+            If (LLess (MSOS (), OSW8))
             {
-                \_SB.ATKD.IANE (0x10)
+                SBRN ()
             }
 
+            If (LGreaterEqual (MSOS (), OSVT))
+            {
+                Store (LBTN, Local0)
+                If (^^^GFX0.PRST ())
+                {
+                    If (LNotEqual (^^^GFX0.LCDD._DCS (), 0x1F))
+                    {
+                        Return (Zero)
+                    }
+
+                    ^^^GFX0.UPBL ()
+                    Store (One, ASBN)
+                }
+
+                If (^^^RP01.PEGP.PRST ())
+                {
+                    If (LNot (ASBN))
+                    {
+                        If (LNotEqual (^^^RP01.PEGP.LCDD._DCS, 0x1F))
+                        {
+                            Return (Zero)
+                        }
+
+                        ^^^RP01.PEGP.UPBL ()
+                        Store (One, ASBN)
+                    }
+                }
+
+                Store (Zero, ASBN)
+                If (ATKP)
+                {
+                    If (LGreaterEqual (MSOS (), OSW8)){}
+                    Else
+                    {
+                        If (LLess (Local0, 0x0A))
+                        {
+                            Increment (Local0)
+                        }
+                        Else
+                        {
+                            Store (0x0A, Local0)
+                        }
+
+                        Store (Local0, LBTN)
+                        ^^^^ATKD.IANE (Add (Local0, 0x10))
+                    }
+                }
+            }
+            Else
+            {
+                If (LLess (LBTN, 0x0A))
+                {
+                    Increment (LBTN)
+                }
+                Else
+                {
+                    Store (0x0A, LBTN)
+                }
+
+                STBR ()
+                If (ATKP)
+                {
+                    ^^^^ATKD.IANE (Add (LBTN, 0x10))
+                }
+            }
+
+            Return (Zero)
         }
 
         Method (_Q10, 0, NotSerialized)  // _Qxx: EC Query
