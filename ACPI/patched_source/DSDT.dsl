@@ -13244,7 +13244,7 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
 
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
-                If (_OSI ("Windows 2012"))
+                If (LEqual (OSYS, 0x07DC))
                 {
                     Return (Zero)
                 }
@@ -38168,7 +38168,7 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
             })
             Method (_INI, 0, NotSerialized)  // _INI: Initialize
             {
-                If (Not (_OSI ("Windows 2012")))
+                If (LNotEqual (OSYS, 0x07DC))
                 {
                     SRXO (0x0203000D, One)
                 }
@@ -38265,7 +38265,7 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
 
             Method (_CRS, 0, Serialized)  // _CRS: Current Resource Settings
             {
-                If (_OSI ("Windows 2012"))
+                If (LEqual (OSYS, 0x07DC))
                 {
                     Return (ConcatenateResTemplate (SBFS, SBFI))
                 }
