@@ -13340,22 +13340,9 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
 
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
-                If (LEqual (OSYS, 0x07DC))
-                {
-                    Return (Zero)
-                }
-
-                If (LEqual (SBRG, Zero))
-                {
-                    Return (Zero)
-                }
-
-                If (LEqual (GPEN, Zero))
-                {
-                    Return (Zero)
-                }
-
+                
                 Return (0x0F)
+
             }
         }
     }
